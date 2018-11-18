@@ -31,8 +31,8 @@ d3.csv("assets/data/data.csv").then(function(data) {
     console.log("No Health Insurance:", data.healthcare);
   });
     // Define SVG area dimensions
-var svgWidth = 960;
-var svgHeight = 500;
+var svgWidth = 1000;
+var svgHeight = 700;
 
 // Define the chart's margins as an object
 var margin = {
@@ -77,9 +77,34 @@ var chartGroup = svg.append("g")
     .attr("transform", "translate(0, " + chartHeight + ")")
     .call(bottomAxis);
 
-
+// new part- draw circles
+theCircles = svg.selectAll("g").data(data).enter();
     
-  });
+theCircles.append("circle")
+.attr("class", "dot")
+.attr("r", 10)
+.attr("cx", function(d)
+    {return xScale(d.poverty);})
+.attr("cy", function(d)
+    {return yScale(d.healthcare);})
+.style("fill", "blue")
+ 
+  theCircles.append("text")
+  .text( function(d) {
+      return d.abbr
+        })
+        .attr("dx", function(d) {
+      return xScale(d.poverty)
+        })
+        .attr("dy", function(d) {
+      return yScale(d.healthcare)
+        })
+        .attr("font-size", 10)
+        .attr("transform", "translate(-5, 0)")
+        .attr("stroke", "white")
+
+  
+  //});
 
 
-
+});
