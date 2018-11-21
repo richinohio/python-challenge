@@ -88,7 +88,19 @@ theCircles.append("circle")
 .attr("cy", function(d)
     {return yScale(d.healthcare);})
 .style("fill", "blue")
- 
+.on("mouseover", function(d) {
+  // Show the tooltip
+  toolTip.show(d);
+  // Highlight the state circle's border
+  d3.select(this).style("stroke", "#323232");
+})
+.on("mouseout", function(d) {
+  // Remove the tooltip
+  toolTip.hide(d);
+  // Remove highlight
+  d3.select(this).style("stroke", "#e3e3e3");
+});
+
   theCircles.append("text")
   .text( function(d) {
       return d.abbr
@@ -101,9 +113,23 @@ theCircles.append("circle")
         })
         .attr("font-size", 10)
         .attr("transform", "translate(-5, 0)")
-        .attr("stroke", "white")
+        .attr("stroke", "white");
 
-  
+        var toolTip = d3.tip().attr("class", "d3-tip").offset([40, -40])
+        .html(function(d) {
+            var text_html = "<div>" + d.state + "</div>"
+            var data_text = "<div>" + d.poverty + "</div>"
+      
+            return text_html + data_text
+        });
+
+        svg.call (toolTip);
+
+        
+    
+    
+    
+    
   //});
 
 
