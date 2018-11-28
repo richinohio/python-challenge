@@ -11,31 +11,57 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(myMap);
 
-// Create a red circle over Dallas
-L.circle([32.7767, -96.7979], {
-  color: "red",
-  fillColor: "red",
-  fillOpacity: 0.75,
-  radius: 10000
-}).addTo(myMap);
+var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson" ;
 
-// Connect a black line from NYC to Toronto
-var line = [
-  [40.7128, -74.0060],
-  [43.6532, -79.3832]
-];
-L.polyline(line, {
-  color: "black"
-}).addTo(myMap);
+ 
+// Grabbing our GeoJSON data..
+d3.json(link, function(data) {
+  // Creating a GeoJSON layer with the retrieved data
+  
+  console.log(data);
+  for (var i = 0; i < data.features.length; i++) {
+    console.log(data.features[i].geometry);
 
-// Create a purple polygon the covers the area in Atlanta, Savannah, Jacksonville and Montgomery
-L.polygon([
-  [33.7490, -84.3880],
-  [32.0809, -81.0912],
-  [30.3322, -81.6557],
-  [32.3792, -86.3077]
-], {
-  color: "purple",
-  fillColor: "purple",
-  fillOpacity: 0.75
-}).addTo(myMap);
+    
+    L.circle([data.features[i].geometry.coordinates[1],data.features[i].geometry.coordinates[0]], {
+      
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: (400 * data.features[i].properties.mag)
+    }).bindPopup(data.features[i].properties.mag).openPopup().addTo(myMap);
+   
+    //var popup = L.popup();
+    //function onMapClick(e) {
+       // popup
+            //.setLatLng(e.latlng)
+            //.setContent("Magnitude: ")
+           // .openOn(myMap);
+        //console.log(e);
+    //}
+    
+    //myMap.on('click', onMapClick);
+    //var legend = L.control({position: 'bottomright'});
+
+//legend.onAdd = function (map) {
+
+    //var div = L.DomUtil.create('div', 'info legend'),
+    //grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+    //labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    //for (var i = 0; i < grades.length; i++) {
+        //div.innerHTML +=
+            //'<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+           // grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+//}
+
+//return div;
+};
+
+legend.addTo(map);
+  
+
+
+});
+
